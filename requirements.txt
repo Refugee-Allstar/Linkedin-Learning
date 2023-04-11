@@ -1,0 +1,14 @@
+Flask==2.0.2
+python-dotenv
+requests
+Flask-Bootstrap
+Gunicorn
+Flask-WTF
+wtforms
+pycryptodome
+pandas
+lxml
+xlsxwriter
+datetime
+pytz
+openai
