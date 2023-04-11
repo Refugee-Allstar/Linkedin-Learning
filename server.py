@@ -53,13 +53,5 @@ def chat():
     return "Hello World!"
     
 
-
-
-
-
-
-# Set the webhook_url to the one provided by Slack when you create the webhook at https://my.slack.com/services/new/incoming-webhook/
-
-
 if __name__ == '__main__':
     app.run(debug=True)
