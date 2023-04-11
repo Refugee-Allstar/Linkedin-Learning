@@ -33,7 +33,7 @@ def chat():
         response_chatgpt = generate_text(prompt)
         answer = jsonify({'message': response_chatgpt})
         headers={'Content-Type': 'application/json'}
-        webhook_url = os.getenv("webhook")
+        webhook_url = os.getenv("WEBHOOK")
 
         headers = {
             "Content-Type": "application/json"
