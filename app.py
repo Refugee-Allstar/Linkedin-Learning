@@ -48,7 +48,7 @@ def chat():
             data=json.dumps(payload)
         )
         print(jsonify({'message': response_chatgpt}))
-        return "Posted Woo"
+        return jsonify({'message': response_chatgpt})
     return render_template('index.html')
     
 if __name__ == "__main__":
