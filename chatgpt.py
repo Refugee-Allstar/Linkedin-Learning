@@ -23,31 +23,35 @@ def generate_text(prompt):
 
 app = Flask(__name__)
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route("/", methods=['POST', 'GET'])
+
 def chat():
-    print(request.json)
-    data = request.json
-    prompt = data['message']
-    response_chatgpt = generate_text(prompt)
-    answer = jsonify({'message': response_chatgpt})
-    headers={'Content-Type': 'application/json'}
-    webhook_url = os.getenv("webhook")
+    if request.method == "POST":
+        print(request.json)
+        data = request.json
+        prompt = data['message']
+        response_chatgpt = generate_text(prompt)
+        answer = jsonify({'message': response_chatgpt})
+        headers={'Content-Type': 'application/json'}
+        webhook_url = os.getenv("webhook")
 
-    headers = {
-        "Content-Type": "application/json"
-    }
+        headers = {
+            "Content-Type": "application/json"
+        }
 
-    payload = {  
-            "message": response_chatgpt
-    }
+        payload = {  
+                "message": response_chatgpt
+        }
 
-    response = requests.post(
-        webhook_url,
-        headers=headers,
-        data=json.dumps(payload)
-    )
-
-    return jsonify({'message': response_chatgpt})
+        response = requests.post(
+            webhook_url,
+            headers=headers,
+            data=json.dumps(payload)
+        )
+        print(jsonify({'message': response_chatgpt}))
+        return "Posted Woo"
+    return "Hello World!"
+    
 
 
 
