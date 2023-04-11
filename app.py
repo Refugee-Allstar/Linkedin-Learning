@@ -6,17 +6,14 @@ import json
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 def generate_text(prompt):
-    response = openai.Completion.create(
+    response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
-    prompt=prompt,
-    temperature=0,
-    max_tokens=100,
-    top_p=1,
-    frequency_penalty=0,
-    presence_penalty=0
-)
+    messages=[
+            {"role": "user", "content": prompt},
+        ]
+    )
 
-    message = response.choices[0].text.strip()
+    message = response['choices'][0]['message']['content']
     return message
 
 
