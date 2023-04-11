@@ -1,27 +1,16 @@
-# syntax=docker/dockerfile:1.4
-FROM --platform=$BUILDPLATFORM python:3.10-alpine AS builder
+# copy the requirements file into the image
+COPY ./requirements.txt /app/requirements.txt
 
+# switch working directory
 WORKDIR /app
 
-COPY requirements.txt /app
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip3 install -r requirements.txt
+# install the dependencies and packages in the requirements file
+RUN pip install -r requirements.txt
 
+# copy every content from the local file to the image
 COPY . /app
 
-ENTRYPOINT ["python3"]
-CMD ["app.py"]
+# configure the container to run in an executed manner
+ENTRYPOINT [ "python" ]
 
-FROM builder as dev-envs
-
-RUN <<EOF
-apk update
-apk add git
-EOF
-
-RUN <<EOF
-addgroup -S docker
-adduser -S --shell /bin/bash --ingroup docker vscode
-EOF
-# install Docker tools (cli, buildx, compose)
-COPY --from=gloursdocker/docker / /
+CMD ["app.py" ]
