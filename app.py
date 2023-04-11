@@ -4,7 +4,6 @@ from flask import Flask, request, jsonify
 import requests
 import json 
 
-
 openai.api_key = os.getenv("OPENAI_API_KEY")
 def generate_text(prompt):
     response = openai.Completion.create(
@@ -54,4 +53,4 @@ def chat():
     
 
 if __name__ == '__main__':
-    app.run(debug=True)
+	app.run(host='0.0.0.0', port=8000)
