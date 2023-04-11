@@ -25,6 +25,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def chat():
+    print(request.json)
     data = request.json
     prompt = data['message']
     response_chatgpt = generate_text(prompt)
