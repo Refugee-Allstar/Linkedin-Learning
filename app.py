@@ -3,14 +3,19 @@ import openai
 from flask import Flask, request, jsonify, render_template
 import requests
 import json 
+from io import BytesIO
+from PIL import Image
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 def generate_text(prompt):
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
+    temperature=.5,
+    max_tokens=150,
     messages=[
-            {"role": "user", "content": prompt},
-        ]
+            {"role": "user", 
+            "content": prompt}]
+
     )
 
     message = response['choices'][0]['message']['content']
@@ -44,7 +49,6 @@ def chat():
             headers=headers,
             data=json.dumps(payload)
         )
-        print(jsonify({'message': response_chatgpt}))
         return jsonify({'message': response_chatgpt})
     return render_template('index.html')
 
@@ -80,6 +84,8 @@ def generateimage():
         print(jsonify({'message': response_chatgpt}))
         return jsonify({'message': response_chatgpt})
     return render_template('index.html')
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
