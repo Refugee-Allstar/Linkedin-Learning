@@ -8,7 +8,7 @@ from PIL import Image
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-
+app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 def generate_text(prompt):
     
@@ -26,7 +26,7 @@ def generate_text(prompt):
     return message
 
 
-app = Flask(__name__)
+
 limiter = Limiter(
     get_remote_address,
     app=app,
