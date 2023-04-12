@@ -56,38 +56,6 @@ def chat():
     return render_template('index.html')
 
 
-@app.route("/photo", methods=['POST', 'GET'])
-def generateimage():
-    if request.method == "POST":
-        print(request.json)
-        data = request.json
-        prompt = data['message']
-        response_chatgpt = openai.Image.create(
-                        prompt=prompt,
-                        n=1,
-                        size="1024x1024"
-                        )
-        answer = jsonify({'message': response_chatgpt})
-        headers={'Content-Type': 'application/json'}
-        webhook_url = os.getenv("WEBHOOK")
-
-        headers = {
-            "Content-Type": "application/json"
-        }
-
-        payload = {  
-                "message": response_chatgpt
-        }
-
-        response = requests.post(
-            webhook_url,
-            headers=headers,
-            data=json.dumps(payload)
-        )
-        print(jsonify({'message': response_chatgpt}))
-        return jsonify({'message': response_chatgpt})
-    return render_template('index.html')
-
 @app.errorhandler(429)
 def ratelimit_handler(e):
   return "You have exceeded your rate-limit"
