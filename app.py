@@ -11,6 +11,7 @@ from flask_limiter.util import get_remote_address
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 def generate_text(prompt):
+    
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     temperature=.5,
@@ -26,7 +27,12 @@ def generate_text(prompt):
 
 
 app = Flask(__name__)
-limiter = Limiter(app, key_func=get_remote_address)
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["1 per 10 seconds"],
+    storage_uri="memory://",
+)
 @app.route("/", methods=['POST', 'GET'])
 @limiter.limit("1 per 10 seconds")
 def chat():
