@@ -5,6 +5,9 @@ import requests
 import json 
 from io import BytesIO
 from PIL import Image
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 def generate_text(prompt):
@@ -23,9 +26,9 @@ def generate_text(prompt):
 
 
 app = Flask(__name__)
-
+limiter = Limiter(app, key_func=get_remote_address)
 @app.route("/", methods=['POST', 'GET'])
-
+@limiter.limit("1 per 10 seconds")
 def chat():
     if request.method == "POST":
         print(request.json)
@@ -85,7 +88,9 @@ def generateimage():
         return jsonify({'message': response_chatgpt})
     return render_template('index.html')
 
-
+@app.errorhandler(429)
+def ratelimit_handler(e):
+  return "You have exceeded your rate-limit"
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
