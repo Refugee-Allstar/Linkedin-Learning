@@ -3,8 +3,6 @@ import openai
 from flask import Flask, request, jsonify, render_template
 import requests
 import json 
-from io import BytesIO
-from PIL import Image
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
