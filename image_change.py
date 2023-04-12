@@ -24,5 +24,3 @@ def alter():
     )
 
     print(response_chatgpt)
-
-alter()

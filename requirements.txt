@@ -12,3 +12,4 @@ xlsxwriter
 datetime
 pytz
 openai
+PIL
