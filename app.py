@@ -31,39 +31,38 @@ limiter = Limiter(
     default_limits=["1 per 10 seconds"],
     storage_uri="memory://",
 )
-@app.route("/", methods=['POST', 'GET'])
-@limiter.limit("1 per 10 seconds")
+@app.route("/", methods=['POST'])
+@limiter.limit("1 per 20 seconds")
 def chat():
-    if request.method == "POST":
-        print(request.json)
-        data = request.json
-        prompt = data['message']
-        name = data['name']
-        response_chatgpt = generate_text(prompt)
-        headers={'Content-Type': 'application/json'}
-        webhook_url = os.getenv("WEBHOOK")
+    print(request.json)
+    data = request.json
+    prompt = data['message']
+    name = data['name']
+    response_chatgpt = generate_text(prompt)
+    headers={'Content-Type': 'application/json'}
+    webhook_url = os.getenv("WEBHOOK")
 
-        headers = {
-            "Content-Type": "application/json"
-        }
+    headers = {
+        "Content-Type": "application/json"
+    }
 
-        payload = {  
-                "message": response_chatgpt,
-                "group": name
-        }
+    payload = {  
+            "message": response_chatgpt,
+            "group": name
+    }
 
-        requests.post(
-            webhook_url,
-            headers=headers,
-            data=json.dumps(payload)
-        )
-        return jsonify({'message': response_chatgpt})
-    return render_template('index.html')
+    requests.post(
+        webhook_url,
+        headers=headers,
+        data=json.dumps(payload)
+    )
+    return jsonify({'message': response_chatgpt})
+    
 
 
 @app.errorhandler(429)
 def ratelimit_handler(e):
-  return "You have exceeded your rate-limit"
+  return {"message":"You have exceeded your rate-limit"}
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
