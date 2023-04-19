@@ -28,7 +28,7 @@ def generate_text(prompt):
 limiter = Limiter(
     get_remote_address,
     app=app,
-    default_limits=["1 per 10 seconds"],
+    default_limits=["1 per 20 seconds"],
     storage_uri="memory://",
 )
 @app.route("/", methods=['POST'])
