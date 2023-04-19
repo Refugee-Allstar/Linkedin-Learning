@@ -38,8 +38,8 @@ def chat():
         print(request.json)
         data = request.json
         prompt = data['message']
+        group = prompt = data['group']
         response_chatgpt = generate_text(prompt)
-        answer = jsonify({'message': response_chatgpt})
         headers={'Content-Type': 'application/json'}
         webhook_url = os.getenv("WEBHOOK")
 
@@ -48,10 +48,11 @@ def chat():
         }
 
         payload = {  
-                "message": response_chatgpt
+                "message": response_chatgpt,
+                "group": group
         }
 
-        response = requests.post(
+        requests.post(
             webhook_url,
             headers=headers,
             data=json.dumps(payload)
