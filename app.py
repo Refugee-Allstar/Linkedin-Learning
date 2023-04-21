@@ -25,14 +25,14 @@ def generate_text(prompt):
 
 
 
-limiter = Limiter(
+#limiter = Limiter(
     get_remote_address,
     app=app,
     default_limits=["1 per 20 seconds"],
     storage_uri="memory://",
-)
+#)
 @app.route("/", methods=['POST'])
-@limiter.limit("1 per 20 seconds")
+#@limiter.limit("1 per 20 seconds")
 def chat():
     print(request.json)
     data = request.json
