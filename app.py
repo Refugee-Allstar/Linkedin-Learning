@@ -48,7 +48,7 @@ def chat():
 
     payload = {  
             "message": response_chatgpt,
-            "group": name
+            "name": name
     }
 
     requests.post(
@@ -56,13 +56,16 @@ def chat():
         headers=headers,
         data=json.dumps(payload)
     )
-    return jsonify({'message': response_chatgpt})
+    return jsonify({"message": "complete",
+                    "group":"Joshua Clark"})
     
 
 
 @app.errorhandler(429)
 def ratelimit_handler(e):
-  return {"message":"You have exceeded your rate-limit"}
+  return {"message":"You have exceeded your rate-limit",
+          "group":"Joshua Clark"}
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
