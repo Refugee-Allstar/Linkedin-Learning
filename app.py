@@ -1,6 +1,6 @@
 import os
 import openai
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 import requests
 import json 
 from flask_limiter import Limiter
@@ -56,11 +56,13 @@ def chat():
         headers=headers,
         data=json.dumps(payload)
     )
-    return {"message": "complete",
-                    "name":name}
+    return redirect(url_for('complete'))
+
     
 
-
+@app.route("/complete", methods=['GET','POST'])
+def complete():
+    return {"message":"Completed"}
 @app.errorhandler(429)
 def ratelimit_handler(e):
   return {"message":"You have exceeded your rate-limit",
