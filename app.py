@@ -54,7 +54,7 @@ def chat():
     requests.post(
         webhook_url,
         headers=headers,
-        data=payload
+        data=json.dumps(payload)
     )
     return {"message": "complete",
                     "name":name}
