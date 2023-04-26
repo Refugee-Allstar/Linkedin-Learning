@@ -13,7 +13,7 @@ def generate_text(prompt):
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     temperature=.5,
-    max_tokens=150,
+    max_tokens=1500,
     messages=[
             {"role": "user", 
             "content": prompt}]
@@ -26,10 +26,10 @@ def generate_text(prompt):
 
 
 #limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["1 per 20 seconds"],
-    storage_uri="memory://",
+    #get_remote_address,
+    #app=app,
+    #default_limits=["1 per 20 seconds"],
+    #storage_uri="memory://",
 #)
 @app.route("/", methods=['POST'])
 #@limiter.limit("1 per 20 seconds")
