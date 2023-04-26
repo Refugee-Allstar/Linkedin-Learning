@@ -57,14 +57,14 @@ def chat():
         data=payload
     )
     return jsonify({"message": "complete",
-                    "group":"Joshua Clark"})
+                    "name":"Joshua Clark"})
     
 
 
 @app.errorhandler(429)
 def ratelimit_handler(e):
   return {"message":"You have exceeded your rate-limit",
-          "group":"Joshua Clark"}
+          "name":"Joshua Clark"}
 
 
 if __name__ == "__main__":
