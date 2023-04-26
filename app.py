@@ -54,7 +54,7 @@ def chat():
     requests.post(
         webhook_url,
         headers=headers,
-        data=jsonify(payload)
+        data=jsonify({payload})
     )
     return jsonify({"message": "complete",
                     "name":"Joshua Clark"})
