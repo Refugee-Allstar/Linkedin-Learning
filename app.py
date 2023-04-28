@@ -47,7 +47,7 @@ def webhookhit(result_dict, message, name):
     )
 
 
-    print('doneeee')
+    
     result_dict["function2"] = {"message":"done", "name": "Joshua Clark"}
 
 #limiter = Limiter(
@@ -63,15 +63,12 @@ def chat():
     prompt = data['message']
     name = data['name']
     result_dict = {}
-    thread1 = threading.Thread(target=webhookhit, args=(result_dict,"ok","Joshua Clark"))
+    thread1 = threading.Thread(target=webhookhit, args=(result_dict,"ok","no one"))
     thread2 = threading.Thread(target=generate_text, args=(prompt,name,result_dict,))
     thread1.start()
     thread2.start()
 
     # Wait for both threads to finish
-    thread1.join()
-    thread2.join()
-    print("Both functions finished execution.")
 
     return {"message":"complete"}
 
