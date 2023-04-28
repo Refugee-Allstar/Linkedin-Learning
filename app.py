@@ -5,10 +5,13 @@ import requests
 import json 
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+import threading
+
+
 
 app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
-def generate_text(prompt):
+def generate_text(prompt, name, result_dict):
     
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
@@ -19,11 +22,33 @@ def generate_text(prompt):
             "content": prompt}]
 
     )
+    chatgpt_answer = response['choices'][0]['message']['content']
+    webhookhit(result_dict, chatgpt_answer, name)
+    result_dict["function1"] = json.dumps(response)
 
-    message = response['choices'][0]['message']['content']
-    return message
+def webhookhit(result_dict, message, name):
+ 
+    headers={'Content-Type': 'application/json'}
+    webhook_url = os.getenv("WEBHOOK")
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    payload = {  
+            "message": message,
+            "name": name
+    }
+
+    requests.post(
+        webhook_url,
+        headers=headers,
+        data=json.dumps(payload)
+    )
 
 
+    print('doneeee')
+    result_dict["function2"] = {"message":"done", "name": "Joshua Clark"}
 
 #limiter = Limiter(
     #get_remote_address,
@@ -34,35 +59,25 @@ def generate_text(prompt):
 @app.route("/", methods=['POST'])
 #@limiter.limit("1 per 20 seconds")
 def chat():
-    print(request.json)
     data = request.json
     prompt = data['message']
     name = data['name']
-    response_chatgpt = generate_text(prompt)
-    headers={'Content-Type': 'application/json'}
-    webhook_url = os.getenv("WEBHOOK")
+    result_dict = {}
+    thread1 = threading.Thread(target=webhookhit, args=(result_dict,"ok","Joshua Clark"))
+    thread2 = threading.Thread(target=generate_text, args=(prompt,name,result_dict,))
+    thread1.start()
+    thread2.start()
 
-    headers = {
-        "Content-Type": "application/json"
-    }
+    # Wait for both threads to finish
+    thread1.join()
+    thread2.join()
+    print("Both functions finished execution.")
 
-    payload = {  
-            "message": response_chatgpt,
-            "name": name
-    }
-
-    requests.post(
-        webhook_url,
-        headers=headers,
-        data=json.dumps(payload)
-    )
-    return redirect(url_for('complete'))
+    return {"message":"complete"}
 
     
 
-@app.route("/complete", methods=['GET','POST'])
-def complete():
-    return {"message":"Completed"}
+
 @app.errorhandler(429)
 def ratelimit_handler(e):
   return {"message":"You have exceeded your rate-limit",
