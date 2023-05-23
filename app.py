@@ -3,8 +3,6 @@ import openai
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 import requests
 import json 
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 import threading
 
 
@@ -50,14 +48,8 @@ def webhookhit(result_dict, message, name):
     
     result_dict["function2"] = {"message":"done", "name": "Joshua Clark"}
 
-#limiter = Limiter(
-    #get_remote_address,
-    #app=app,
-    #default_limits=["1 per 20 seconds"],
-    #storage_uri="memory://",
-#)
+
 @app.route("/", methods=['POST'])
-#@limiter.limit("1 per 20 seconds")
 def chat():
     data = request.json
     prompt = data['message']
