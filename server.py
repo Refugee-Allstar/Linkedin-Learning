@@ -74,4 +74,6 @@ def ratelimit_handler(e):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    # 以debug模式运行本网页应用
+    # debug模式能检测服务端模块的代码变化，如果有修改会自动重启服务
+    app.run(host="0.0.0.0", port=5000, debug=True)
