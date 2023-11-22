@@ -9,7 +9,7 @@ import threading
 
 app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
-def generate_text(prompt, name, result_dict):
+def generate_text(prompt, name, result_dict, group):
     
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
@@ -21,10 +21,10 @@ def generate_text(prompt, name, result_dict):
 
     )
     chatgpt_answer = response['choices'][0]['message']['content']
-    webhookhit(result_dict, chatgpt_answer, name)
+    webhookhit(result_dict, chatgpt_answer, name, group)
     result_dict["function1"] = json.dumps(response)
 
-def webhookhit(result_dict, message, name):
+def webhookhit(result_dict, message, name, group):
  
     headers={'Content-Type': 'application/json'}
     webhook_url = os.getenv("WEBHOOK")
@@ -35,7 +35,8 @@ def webhookhit(result_dict, message, name):
 
     payload = {  
             "message": message,
-            "name": name
+            "name": name,
+            "group": group
     }
 
     requests.post(
@@ -54,9 +55,10 @@ def chat():
     data = request.json
     prompt = data['message']
     name = data['name']
+    group = data['group']
     result_dict = {}
     thread1 = threading.Thread(target=webhookhit, args=(result_dict,"ok","no one"))
-    thread2 = threading.Thread(target=generate_text, args=(prompt,name,result_dict,))
+    thread2 = threading.Thread(target=generate_text, args=(prompt,name,result_dict,group))
     thread1.start()
     thread2.start()
 
